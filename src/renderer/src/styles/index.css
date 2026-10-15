@@ -1,0 +1,141 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Dark Mode Default Tokens */
+  --color-bg: #090d16;
+  --color-surface: rgba(17, 24, 39, 0.75);
+  --color-surface-elevated: rgba(30, 41, 59, 0.85);
+  --color-border: rgba(255, 255, 255, 0.08);
+  --color-text: #f8fafc;
+  --color-text-muted: #94a3b8;
+  --color-accent: #6366f1;
+  --color-accent-hover: #4f46e5;
+  --color-accent-soft: rgba(99, 102, 241, 0.15);
+}
+
+html.light {
+  --color-bg: #f1f5f9;
+  --color-surface: rgba(255, 255, 255, 0.85);
+  --color-surface-elevated: #ffffff;
+  --color-border: rgba(0, 0, 0, 0.08);
+  --color-text: #0f172a;
+  --color-text-muted: #64748b;
+  --color-accent-soft: rgba(99, 102, 241, 0.1);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(150, 150, 150, 0.2);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(150, 150, 150, 0.4);
+}
+
+/* Electron App Region Drag */
+.titlebar-drag-region {
+  -webkit-app-region: drag;
+}
+
+.titlebar-no-drag {
+  -webkit-app-region: no-drag;
+}
+
+/* Glassmorphism Classes */
+.glass-panel {
+  background: var(--color-surface);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--color-border);
+}
+
+.glass-panel-elevated {
+  background: var(--color-surface-elevated);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--color-border);
+}
+
+/* FullCalendar Custom Theming */
+.fc {
+  --fc-border-color: var(--color-border);
+  --fc-page-bg-color: transparent;
+  --fc-neutral-bg-color: transparent;
+  --fc-today-bg-color: rgba(99, 102, 241, 0.05);
+  font-family: inherit;
+}
+
+.fc .fc-toolbar-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.25rem !important;
+  font-weight: 700 !important;
+  color: var(--color-text);
+}
+
+.fc .fc-button-primary {
+  background-color: var(--color-surface-elevated) !important;
+  border: 1px solid var(--color-border) !important;
+  color: var(--color-text) !important;
+  font-weight: 500;
+  border-radius: 0.5rem;
+  padding: 0.35rem 0.75rem;
+  transition: all 0.15s ease-in-out;
+  text-transform: capitalize;
+}
+
+.fc .fc-button-primary:hover {
+  background-color: var(--color-accent) !important;
+  border-color: var(--color-accent) !important;
+  color: white !important;
+}
+
+.fc .fc-button-active {
+  background-color: var(--color-accent) !important;
+  border-color: var(--color-accent) !important;
+  color: white !important;
+}
+
+.fc .fc-col-header-cell-cushion {
+  color: var(--color-text-muted);
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: capitalize;
+  padding: 8px 4px !important;
+}
+
+.fc .fc-timegrid-slot-label-cushion {
+  color: var(--color-text-muted);
+  font-size: 0.75rem;
+}
+
+.fc-theme-standard td, .fc-theme-standard th {
+  border-color: var(--color-border) !important;
+}
+
+.fc .fc-timegrid-now-indicator-line {
+  border-color: #ef4444 !important;
+  border-width: 2px !important;
+}
+
+.fc .fc-timegrid-now-indicator-arrow {
+  border-color: #ef4444 !important;
+}
+
+.fc-event {
+  border-radius: 6px !important;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
