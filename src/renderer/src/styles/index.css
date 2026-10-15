@@ -78,7 +78,7 @@ html.light {
 }
 
 .fc .fc-toolbar-title {
-  font-family: 'Outfit', sans-serif;
+  font-family: "Outfit", sans-serif;
   font-size: 1.25rem !important;
   font-weight: 700 !important;
   color: var(--color-text);
@@ -120,7 +120,8 @@ html.light {
   font-size: 0.75rem;
 }
 
-.fc-theme-standard td, .fc-theme-standard th {
+.fc-theme-standard td,
+.fc-theme-standard th {
   border-color: var(--color-border) !important;
 }
 

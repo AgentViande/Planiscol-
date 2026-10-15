@@ -1,35 +1,45 @@
-import React, { useState, useEffect } from 'react'
-import { Sparkles, Calendar, Clock, Tag, X, CornerDownLeft } from 'lucide-react'
-import { parseNaturalLanguageTask } from '../../utils/naturalLanguageParser'
-import { useSubjectStore } from '../../stores/useSubjectStore'
-import { useTaskStore } from '../../stores/useTaskStore'
-import { Task } from '../../types'
+import React, { useState, useEffect } from "react";
+import {
+  Sparkles,
+  Calendar,
+  Clock,
+  Tag,
+  X,
+  CornerDownLeft,
+} from "lucide-react";
+import { parseNaturalLanguageTask } from "../../utils/naturalLanguageParser";
+import { useSubjectStore } from "../../stores/useSubjectStore";
+import { useTaskStore } from "../../stores/useTaskStore";
+import { Task } from "../../types";
 
 interface QuickAddModalProps {
-  isOpen: boolean
-  onClose: () => void
+  isOpen: boolean;
+  onClose: () => void;
 }
 
-export const QuickAddModal: React.FC<QuickAddModalProps> = ({ isOpen, onClose }) => {
-  const [input, setInput] = useState('')
-  const { subjects, getSubjectById } = useSubjectStore()
-  const { saveTask } = useTaskStore()
+export const QuickAddModal: React.FC<QuickAddModalProps> = ({
+  isOpen,
+  onClose,
+}) => {
+  const [input, setInput] = useState("");
+  const { subjects, getSubjectById } = useSubjectStore();
+  const { saveTask } = useTaskStore();
 
   useEffect(() => {
     if (isOpen) {
-      setInput('')
+      setInput("");
     }
-  }, [isOpen])
+  }, [isOpen]);
 
-  if (!isOpen) return null
+  if (!isOpen) return null;
 
-  const parsed = parseNaturalLanguageTask(input, subjects)
-  const subject = getSubjectById(parsed.subjectId)
+  const parsed = parseNaturalLanguageTask(input, subjects);
+  const subject = getSubjectById(parsed.subjectId);
 
   const handleKeyDown = async (e: React.KeyboardEvent): Promise<void> => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault()
-      if (!parsed.title.trim()) return
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      if (!parsed.title.trim()) return;
 
       const newTask: Task = {
         id: `task-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
@@ -39,20 +49,20 @@ export const QuickAddModal: React.FC<QuickAddModalProps> = ({ isOpen, onClose })
         priority: parsed.priority,
         dueDate: parsed.dueDate,
         estimatedDuration: parsed.estimatedDuration || 30,
-        status: 'todo',
+        status: "todo",
         tags: parsed.tags,
         orderIndex: 0,
         isArchived: false,
         createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
-      }
+        updatedAt: new Date().toISOString(),
+      };
 
-      await saveTask(newTask)
-      onClose()
-    } else if (e.key === 'Escape') {
-      onClose()
+      await saveTask(newTask);
+      onClose();
+    } else if (e.key === "Escape") {
+      onClose();
     }
-  }
+  };
 
   return (
     <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-md flex items-start justify-center pt-24 p-4 animate-in fade-in duration-150">
@@ -103,7 +113,7 @@ export const QuickAddModal: React.FC<QuickAddModalProps> = ({ isOpen, onClose })
                   className="px-2 py-0.5 rounded-md font-semibold"
                   style={{
                     backgroundColor: `${subject.color}25`,
-                    color: subject.color
+                    color: subject.color,
                   }}
                 >
                   {subject.name}
@@ -113,18 +123,18 @@ export const QuickAddModal: React.FC<QuickAddModalProps> = ({ isOpen, onClose })
               {/* Priorité */}
               <span
                 className={`px-2 py-0.5 rounded-md font-semibold ${
-                  parsed.priority === 'high'
-                    ? 'bg-red-500/20 text-red-300'
-                    : parsed.priority === 'medium'
-                    ? 'bg-amber-500/20 text-amber-300'
-                    : 'bg-emerald-500/20 text-emerald-300'
+                  parsed.priority === "high"
+                    ? "bg-red-500/20 text-red-300"
+                    : parsed.priority === "medium"
+                      ? "bg-amber-500/20 text-amber-300"
+                      : "bg-emerald-500/20 text-emerald-300"
                 }`}
               >
-                {parsed.priority === 'high'
-                  ? '🔴 Haute'
-                  : parsed.priority === 'medium'
-                  ? '🟠 Moyenne'
-                  : '🟢 Basse'}
+                {parsed.priority === "high"
+                  ? "🔴 Haute"
+                  : parsed.priority === "medium"
+                    ? "🟠 Moyenne"
+                    : "🟢 Basse"}
               </span>
 
               {/* Type */}
@@ -137,12 +147,12 @@ export const QuickAddModal: React.FC<QuickAddModalProps> = ({ isOpen, onClose })
                 <span className="px-2 py-0.5 rounded-md bg-blue-500/20 text-blue-300 flex items-center gap-1 font-medium">
                   <Calendar className="w-3 h-3" />
                   <span>
-                    {new Date(parsed.dueDate).toLocaleDateString('fr-FR', {
-                      weekday: 'short',
-                      day: 'numeric',
-                      month: 'short',
-                      hour: '2-digit',
-                      minute: '2-digit'
+                    {new Date(parsed.dueDate).toLocaleDateString("fr-FR", {
+                      weekday: "short",
+                      day: "numeric",
+                      month: "short",
+                      hour: "2-digit",
+                      minute: "2-digit",
                     })}
                   </span>
                 </span>
@@ -172,7 +182,9 @@ export const QuickAddModal: React.FC<QuickAddModalProps> = ({ isOpen, onClose })
 
         {/* Footer tip */}
         <div className="flex items-center justify-between text-[11px] text-slate-400 pt-1">
-          <span>Tapez votre consigne naturellement avec dates, heures et matières.</span>
+          <span>
+            Tapez votre consigne naturellement avec dates, heures et matières.
+          </span>
           <div className="flex items-center gap-1 font-semibold text-slate-300">
             <span>Appuyez sur</span>
             <kbd className="px-1.5 py-0.5 rounded bg-white/10 flex items-center gap-0.5">
@@ -183,5 +195,5 @@ export const QuickAddModal: React.FC<QuickAddModalProps> = ({ isOpen, onClose })
         </div>
       </div>
     </div>
-  )
-}
+  );
+};

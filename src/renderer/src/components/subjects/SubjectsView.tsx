@@ -1,62 +1,72 @@
-import React, { useState } from 'react'
-import { Plus, BookOpen, User, MapPin, Award, Folder, Trash2, Edit2, FileText } from 'lucide-react'
-import { useSubjectStore } from '../../stores/useSubjectStore'
-import { Subject } from '../../types'
+import React, { useState } from "react";
+import {
+  Plus,
+  BookOpen,
+  User,
+  MapPin,
+  Award,
+  Folder,
+  Trash2,
+  Edit2,
+  FileText,
+} from "lucide-react";
+import { useSubjectStore } from "../../stores/useSubjectStore";
+import { Subject } from "../../types";
 
 interface SubjectsViewProps {
-  onOpenNotes: (subject: Subject) => void
+  onOpenNotes: (subject: Subject) => void;
 }
 
 export const SubjectsView: React.FC<SubjectsViewProps> = ({ onOpenNotes }) => {
-  const { subjects, saveSubject, deleteSubject } = useSubjectStore()
-  const [editingSubject, setEditingSubject] = useState<Subject | null>(null)
-  const [isModalOpen, setIsModalOpen] = useState(false)
+  const { subjects, saveSubject, deleteSubject } = useSubjectStore();
+  const [editingSubject, setEditingSubject] = useState<Subject | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Form states
-  const [name, setName] = useState('')
-  const [category, setCategory] = useState('')
-  const [color, setColor] = useState('#3b82f6')
-  const [icon, setIcon] = useState('📚')
-  const [teacher, setTeacher] = useState('')
-  const [room, setRoom] = useState('')
-  const [coefficient, setCoefficient] = useState<number>(1)
-  const [courseFolderPath, setCourseFolderPath] = useState('')
+  const [name, setName] = useState("");
+  const [category, setCategory] = useState("");
+  const [color, setColor] = useState("#3b82f6");
+  const [icon, setIcon] = useState("📚");
+  const [teacher, setTeacher] = useState("");
+  const [room, setRoom] = useState("");
+  const [coefficient, setCoefficient] = useState<number>(1);
+  const [courseFolderPath, setCourseFolderPath] = useState("");
 
   const handleOpenCreate = () => {
-    setEditingSubject(null)
-    setName('')
-    setCategory('Sciences')
-    setColor('#3b82f6')
-    setIcon('📚')
-    setTeacher('')
-    setRoom('')
-    setCoefficient(1)
-    setCourseFolderPath('')
-    setIsModalOpen(true)
-  }
+    setEditingSubject(null);
+    setName("");
+    setCategory("Sciences");
+    setColor("#3b82f6");
+    setIcon("📚");
+    setTeacher("");
+    setRoom("");
+    setCoefficient(1);
+    setCourseFolderPath("");
+    setIsModalOpen(true);
+  };
 
   const handleOpenEdit = (s: Subject) => {
-    setEditingSubject(s)
-    setName(s.name)
-    setCategory(s.category || 'Général')
-    setColor(s.color)
-    setIcon(s.icon || '📚')
-    setTeacher(s.teacher || '')
-    setRoom(s.room || '')
-    setCoefficient(s.coefficient || 1)
-    setCourseFolderPath(s.courseFolderPath || '')
-    setIsModalOpen(true)
-  }
+    setEditingSubject(s);
+    setName(s.name);
+    setCategory(s.category || "Général");
+    setColor(s.color);
+    setIcon(s.icon || "📚");
+    setTeacher(s.teacher || "");
+    setRoom(s.room || "");
+    setCoefficient(s.coefficient || 1);
+    setCourseFolderPath(s.courseFolderPath || "");
+    setIsModalOpen(true);
+  };
 
   const handleSave = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!name.trim()) return
+    e.preventDefault();
+    if (!name.trim()) return;
 
-    const now = new Date().toISOString()
+    const now = new Date().toISOString();
     const subjectData: Subject = {
       id: editingSubject?.id || `sub-${Date.now()}`,
       name: name.trim(),
-      category: category.trim() || 'Général',
+      category: category.trim() || "Général",
       color,
       icon,
       teacher: teacher.trim() || undefined,
@@ -64,34 +74,34 @@ export const SubjectsView: React.FC<SubjectsViewProps> = ({ onOpenNotes }) => {
       coefficient: coefficient > 0 ? coefficient : 1,
       courseFolderPath: courseFolderPath.trim() || undefined,
       createdAt: editingSubject ? editingSubject.createdAt : now,
-      updatedAt: now
-    }
+      updatedAt: now,
+    };
 
-    await saveSubject(subjectData)
-    setIsModalOpen(false)
-  }
+    await saveSubject(subjectData);
+    setIsModalOpen(false);
+  };
 
   const handlePickCourseFolder = async () => {
     const picked = await window.api.dialog.pickDirectory({
-      title: 'Sélectionner le dossier de cours sur votre PC'
-    })
+      title: "Sélectionner le dossier de cours sur votre PC",
+    });
     if (picked) {
-      setCourseFolderPath(picked)
+      setCourseFolderPath(picked);
     }
-  }
+  };
 
   const palette = [
-    '#3b82f6',
-    '#6366f1',
-    '#8b5cf6',
-    '#ec4899',
-    '#ef4444',
-    '#f97316',
-    '#f59e0b',
-    '#10b981',
-    '#06b6d4',
-    '#64748b'
-  ]
+    "#3b82f6",
+    "#6366f1",
+    "#8b5cf6",
+    "#ec4899",
+    "#ef4444",
+    "#f97316",
+    "#f59e0b",
+    "#10b981",
+    "#06b6d4",
+    "#64748b",
+  ];
 
   return (
     <div className="h-full flex flex-col p-6 space-y-4 overflow-hidden select-none">
@@ -102,7 +112,8 @@ export const SubjectsView: React.FC<SubjectsViewProps> = ({ onOpenNotes }) => {
             Matières & Cours
           </h1>
           <p className="text-xs text-slate-400 mt-0.5">
-            Gérez vos matières, coefficients, professeurs et dossiers de cours locaux.
+            Gérez vos matières, coefficients, professeurs et dossiers de cours
+            locaux.
           </p>
         </div>
 
@@ -134,14 +145,19 @@ export const SubjectsView: React.FC<SubjectsViewProps> = ({ onOpenNotes }) => {
                   <div className="flex items-center gap-3">
                     <div
                       className="w-10 h-10 rounded-xl flex items-center justify-center text-xl shadow-md"
-                      style={{ backgroundColor: `${sub.color}25`, border: `1px solid ${sub.color}50` }}
+                      style={{
+                        backgroundColor: `${sub.color}25`,
+                        border: `1px solid ${sub.color}50`,
+                      }}
                     >
-                      {sub.icon || '📚'}
+                      {sub.icon || "📚"}
                     </div>
                     <div>
-                      <h3 className="font-display font-bold text-base text-white">{sub.name}</h3>
+                      <h3 className="font-display font-bold text-base text-white">
+                        {sub.name}
+                      </h3>
                       <span className="text-[11px] font-semibold text-slate-400">
-                        {sub.category || 'Général'}
+                        {sub.category || "Général"}
                       </span>
                     </div>
                   </div>
@@ -187,12 +203,16 @@ export const SubjectsView: React.FC<SubjectsViewProps> = ({ onOpenNotes }) => {
 
                   {sub.courseFolderPath && (
                     <div
-                      onClick={() => window.api.file.openPath(sub.courseFolderPath!)}
+                      onClick={() =>
+                        window.api.file.openPath(sub.courseFolderPath!)
+                      }
                       className="flex items-center gap-2 text-indigo-400 hover:underline cursor-pointer truncate"
                       title={sub.courseFolderPath}
                     >
                       <Folder className="w-3.5 h-3.5 shrink-0" />
-                      <span className="truncate">Ouvrir le dossier de cours</span>
+                      <span className="truncate">
+                        Ouvrir le dossier de cours
+                      </span>
                     </div>
                   )}
                 </div>
@@ -218,7 +238,7 @@ export const SubjectsView: React.FC<SubjectsViewProps> = ({ onOpenNotes }) => {
         <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
           <div className="glass-panel-elevated w-full max-w-md rounded-2xl p-6 shadow-2xl border-white/10 animate-in fade-in zoom-in-95 duration-200">
             <h2 className="font-display text-lg font-bold text-white mb-4">
-              {editingSubject ? 'Modifier la matière' : 'Nouvelle matière'}
+              {editingSubject ? "Modifier la matière" : "Nouvelle matière"}
             </h2>
 
             <form onSubmit={handleSave} className="space-y-4">
@@ -276,7 +296,9 @@ export const SubjectsView: React.FC<SubjectsViewProps> = ({ onOpenNotes }) => {
                       type="button"
                       onClick={() => setColor(c)}
                       className={`w-6 h-6 rounded-full transition-transform ${
-                        color === c ? 'scale-125 ring-2 ring-white' : 'hover:scale-110'
+                        color === c
+                          ? "scale-125 ring-2 ring-white"
+                          : "hover:scale-110"
                       }`}
                       style={{ backgroundColor: c }}
                     />
@@ -299,7 +321,9 @@ export const SubjectsView: React.FC<SubjectsViewProps> = ({ onOpenNotes }) => {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">Salle</label>
+                  <label className="block text-xs font-semibold text-slate-300 mb-1">
+                    Salle
+                  </label>
                   <input
                     type="text"
                     value={room}
@@ -318,7 +342,9 @@ export const SubjectsView: React.FC<SubjectsViewProps> = ({ onOpenNotes }) => {
                     min="0.5"
                     step="0.5"
                     value={coefficient}
-                    onChange={(e) => setCoefficient(parseFloat(e.target.value) || 1)}
+                    onChange={(e) =>
+                      setCoefficient(parseFloat(e.target.value) || 1)
+                    }
                     className="w-full bg-slate-900 border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-accent"
                   />
                 </div>
@@ -367,5 +393,5 @@ export const SubjectsView: React.FC<SubjectsViewProps> = ({ onOpenNotes }) => {
         </div>
       )}
     </div>
-  )
-}
+  );
+};

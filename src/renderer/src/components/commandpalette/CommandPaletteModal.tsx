@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect } from "react";
 import {
   Command,
   LayoutDashboard,
   CheckSquare,
+  Columns3,
   Calendar,
   BookOpen,
   GraduationCap,
@@ -11,17 +12,18 @@ import {
   Download,
   Moon,
   Sun,
-  Search
-} from 'lucide-react'
-import { useSettingsStore } from '../../stores/useSettingsStore'
+  Search,
+} from "lucide-react";
+import { useSettingsStore } from "../../stores/useSettingsStore";
+import { TabType } from "../layout/Sidebar";
 
 interface CommandPaletteModalProps {
-  isOpen: boolean
-  onClose: () => void
-  onNavigate: (tab: 'dashboard' | 'todo' | 'calendar' | 'subjects' | 'grades' | 'settings') => void
-  onOpenQuickAdd: () => void
-  onOpenPomodoro: () => void
-  onOpenCreateTask: () => void
+  isOpen: boolean;
+  onClose: () => void;
+  onNavigate: (tab: TabType) => void;
+  onOpenQuickAdd: () => void;
+  onOpenPomodoro: () => void;
+  onOpenCreateTask: () => void;
 }
 
 export const CommandPaletteModal: React.FC<CommandPaletteModalProps> = ({
@@ -30,162 +32,174 @@ export const CommandPaletteModal: React.FC<CommandPaletteModalProps> = ({
   onNavigate,
   onOpenQuickAdd,
   onOpenPomodoro,
-  onOpenCreateTask
+  onOpenCreateTask,
 }) => {
-  const [query, setQuery] = useState('')
-  const [selectedIndex, setSelectedIndex] = useState(0)
-  const { updateSettings } = useSettingsStore()
+  const [query, setQuery] = useState("");
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const { updateSettings } = useSettingsStore();
 
   useEffect(() => {
     if (isOpen) {
-      setQuery('')
-      setSelectedIndex(0)
+      setQuery("");
+      setSelectedIndex(0);
     }
-  }, [isOpen])
+  }, [isOpen]);
 
-  if (!isOpen) return null
+  if (!isOpen) return null;
 
   const commands = [
     {
-      id: 'quick-add',
-      title: 'Ajout Rapide en Langage Naturel',
-      category: 'Actions',
+      id: "quick-add",
+      title: "Ajout Rapide en Langage Naturel",
+      category: "Actions",
       icon: Sparkles,
       action: () => {
-        onClose()
-        onOpenQuickAdd()
-      }
+        onClose();
+        onOpenQuickAdd();
+      },
     },
     {
-      id: 'create-task',
-      title: 'Créer une nouvelle tâche',
-      category: 'Actions',
+      id: "create-task",
+      title: "Créer une nouvelle tâche",
+      category: "Actions",
       icon: CheckSquare,
       action: () => {
-        onClose()
-        onOpenCreateTask()
-      }
+        onClose();
+        onOpenCreateTask();
+      },
     },
     {
-      id: 'pomodoro',
-      title: 'Ouvrir le minuteur Pomodoro',
-      category: 'Actions',
+      id: "pomodoro",
+      title: "Ouvrir le minuteur Pomodoro",
+      category: "Actions",
       icon: Clock,
       action: () => {
-        onClose()
-        onOpenPomodoro()
-      }
+        onClose();
+        onOpenPomodoro();
+      },
     },
     {
-      id: 'nav-dash',
-      title: 'Aller au Tableau de bord',
-      category: 'Navigation',
+      id: "nav-dash",
+      title: "Aller au Tableau de bord",
+      category: "Navigation",
       icon: LayoutDashboard,
       action: () => {
-        onClose()
-        onNavigate('dashboard')
-      }
+        onClose();
+        onNavigate("dashboard");
+      },
     },
     {
-      id: 'nav-todo',
-      title: 'Aller aux Tâches (To-Do List)',
-      category: 'Navigation',
+      id: "nav-todo",
+      title: "Aller aux Tâches (To-Do List)",
+      category: "Navigation",
       icon: CheckSquare,
       action: () => {
-        onClose()
-        onNavigate('todo')
-      }
+        onClose();
+        onNavigate("todo");
+      },
     },
     {
-      id: 'nav-cal',
-      title: 'Aller à l’Agenda & Calendrier',
-      category: 'Navigation',
+      id: "nav-kanban",
+      title: "Aller au Tableau Kanban",
+      category: "Navigation",
+      icon: Columns3,
+      action: () => {
+        onClose();
+        onNavigate("kanban");
+      },
+    },
+    {
+      id: "nav-cal",
+      title: "Aller à l’Agenda & Calendrier",
+      category: "Navigation",
       icon: Calendar,
       action: () => {
-        onClose()
-        onNavigate('calendar')
-      }
+        onClose();
+        onNavigate("calendar");
+      },
     },
     {
-      id: 'nav-sub',
-      title: 'Aller aux Matières & Cours',
-      category: 'Navigation',
+      id: "nav-sub",
+      title: "Aller aux Matières & Cours",
+      category: "Navigation",
       icon: BookOpen,
       action: () => {
-        onClose()
-        onNavigate('subjects')
-      }
+        onClose();
+        onNavigate("subjects");
+      },
     },
     {
-      id: 'nav-grades',
-      title: 'Aller au Suivi des Notes',
-      category: 'Navigation',
+      id: "nav-grades",
+      title: "Aller au Suivi des Notes",
+      category: "Navigation",
       icon: GraduationCap,
       action: () => {
-        onClose()
-        onNavigate('grades')
-      }
+        onClose();
+        onNavigate("grades");
+      },
     },
     {
-      id: 'theme-dark',
-      title: 'Activer le Thème Sombre',
-      category: 'Apparence',
+      id: "theme-dark",
+      title: "Activer le Thème Sombre",
+      category: "Apparence",
       icon: Moon,
       action: () => {
-        updateSettings({ theme: 'dark' })
-        onClose()
-      }
+        updateSettings({ theme: "dark" });
+        onClose();
+      },
     },
     {
-      id: 'theme-light',
-      title: 'Activer le Thème Clair',
-      category: 'Apparence',
+      id: "theme-light",
+      title: "Activer le Thème Clair",
+      category: "Apparence",
       icon: Sun,
       action: () => {
-        updateSettings({ theme: 'light' })
-        onClose()
-      }
+        updateSettings({ theme: "light" });
+        onClose();
+      },
     },
     {
-      id: 'backup',
-      title: 'Créer une sauvegarde locale instantanée',
-      category: 'Sauvegarde',
+      id: "backup",
+      title: "Créer une sauvegarde locale instantanée",
+      category: "Sauvegarde",
       icon: Download,
       action: async () => {
         if (window.api) {
-          await window.api.db.createBackup()
+          await window.api.db.createBackup();
           window.api.notification.show({
-            title: 'Sauvegarde créée',
-            body: 'Un instantané complet a été enregistré dans le dossier utilisateur.'
-          })
+            title: "Sauvegarde créée",
+            body: "Un instantané complet a été enregistré dans le dossier utilisateur.",
+          });
         }
-        onClose()
-      }
-    }
-  ]
+        onClose();
+      },
+    },
+  ];
 
   const filtered = commands.filter(
     (c) =>
       c.title.toLowerCase().includes(query.toLowerCase()) ||
-      c.category.toLowerCase().includes(query.toLowerCase())
-  )
+      c.category.toLowerCase().includes(query.toLowerCase()),
+  );
 
   const handleKeyDown = (e: React.KeyboardEvent): void => {
-    if (e.key === 'ArrowDown') {
-      e.preventDefault()
-      setSelectedIndex((prev) => (prev + 1) % filtered.length)
-    } else if (e.key === 'ArrowUp') {
-      e.preventDefault()
-      setSelectedIndex((prev) => (prev - 1 + filtered.length) % filtered.length)
-    } else if (e.key === 'Enter') {
-      e.preventDefault()
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      setSelectedIndex((prev) => (prev + 1) % filtered.length);
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      setSelectedIndex(
+        (prev) => (prev - 1 + filtered.length) % filtered.length,
+      );
+    } else if (e.key === "Enter") {
+      e.preventDefault();
       if (filtered[selectedIndex]) {
-        filtered[selectedIndex].action()
+        filtered[selectedIndex].action();
       }
-    } else if (e.key === 'Escape') {
-      onClose()
+    } else if (e.key === "Escape") {
+      onClose();
     }
-  }
+  };
 
   return (
     <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-md flex items-start justify-center pt-24 p-4 animate-in fade-in duration-150">
@@ -197,25 +211,29 @@ export const CommandPaletteModal: React.FC<CommandPaletteModalProps> = ({
             type="text"
             value={query}
             onChange={(e) => {
-              setQuery(e.target.value)
-              setSelectedIndex(0)
+              setQuery(e.target.value);
+              setSelectedIndex(0);
             }}
             onKeyDown={handleKeyDown}
             placeholder="Tapez une commande ou cherchez un écran..."
             className="w-full bg-transparent text-sm text-white placeholder-slate-500 focus:outline-none"
             autoFocus
           />
-          <kbd className="text-[10px] bg-white/10 px-1.5 py-0.5 rounded text-slate-400">ESC</kbd>
+          <kbd className="text-[10px] bg-white/10 px-1.5 py-0.5 rounded text-slate-400">
+            ESC
+          </kbd>
         </div>
 
         {/* List of items */}
         <div className="max-h-80 overflow-y-auto p-2 space-y-1">
           {filtered.length === 0 ? (
-            <p className="text-xs text-slate-500 text-center py-6">Aucune commande trouvée.</p>
+            <p className="text-xs text-slate-500 text-center py-6">
+              Aucune commande trouvée.
+            </p>
           ) : (
             filtered.map((item, index) => {
-              const Icon = item.icon
-              const isSelected = index === selectedIndex
+              const Icon = item.icon;
+              const isSelected = index === selectedIndex;
               return (
                 <div
                   key={item.id}
@@ -223,23 +241,25 @@ export const CommandPaletteModal: React.FC<CommandPaletteModalProps> = ({
                   onMouseEnter={() => setSelectedIndex(index)}
                   className={`flex items-center justify-between px-3 py-2.5 rounded-xl cursor-pointer text-xs transition-colors ${
                     isSelected
-                      ? 'bg-accent/20 text-white font-medium border border-accent/30'
-                      : 'text-slate-300 hover:bg-white/5'
+                      ? "bg-accent/20 text-white font-medium border border-accent/30"
+                      : "text-slate-300 hover:bg-white/5"
                   }`}
                 >
                   <div className="flex items-center gap-2.5">
-                    <Icon className={`w-4 h-4 ${isSelected ? 'text-accent' : 'text-slate-400'}`} />
+                    <Icon
+                      className={`w-4 h-4 ${isSelected ? "text-accent" : "text-slate-400"}`}
+                    />
                     <span>{item.title}</span>
                   </div>
                   <span className="text-[10px] text-slate-500 font-medium px-1.5 py-0.5 rounded bg-white/5">
                     {item.category}
                   </span>
                 </div>
-              )
+              );
             })
           )}
         </div>
       </div>
     </div>
-  )
-}
+  );
+};

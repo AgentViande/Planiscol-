@@ -1,57 +1,59 @@
-import React, { useState, useEffect } from 'react'
-import { X, Save, FileText } from 'lucide-react'
-import { Subject, SubjectNote } from '../../types'
+import React, { useState, useEffect } from "react";
+import { X, Save, FileText } from "lucide-react";
+import { Subject, SubjectNote } from "../../types";
 
 interface SubjectNotesModalProps {
-  subject: Subject | null
-  isOpen: boolean
-  onClose: () => void
+  subject: Subject | null;
+  isOpen: boolean;
+  onClose: () => void;
 }
 
 export const SubjectNotesModal: React.FC<SubjectNotesModalProps> = ({
   subject,
   isOpen,
-  onClose
+  onClose,
 }) => {
-  const [content, setContent] = useState('')
-  const [title, setTitle] = useState('')
-  const [noteId, setNoteId] = useState<string | null>(null)
-  const [isSaved, setIsSaved] = useState(false)
+  const [content, setContent] = useState("");
+  const [title, setTitle] = useState("");
+  const [noteId, setNoteId] = useState<string | null>(null);
+  const [isSaved, setIsSaved] = useState(false);
 
   useEffect(() => {
     if (subject && isOpen) {
       if (window.api) {
         window.api.db.getNotes(subject.id).then((notes) => {
           if (notes.length > 0) {
-            setNoteId(notes[0].id)
-            setTitle(notes[0].title)
-            setContent(notes[0].content)
+            setNoteId(notes[0].id);
+            setTitle(notes[0].title);
+            setContent(notes[0].content);
           } else {
-            setNoteId(null)
-            setTitle(`Notes de cours — ${subject.name}`)
-            setContent(`# ${subject.name}\n\n- Chapitre 1 : \n- Formules importantes : \n`)
+            setNoteId(null);
+            setTitle(`Notes de cours — ${subject.name}`);
+            setContent(
+              `# ${subject.name}\n\n- Chapitre 1 : \n- Formules importantes : \n`,
+            );
           }
-        })
+        });
       }
     }
-  }, [subject, isOpen])
+  }, [subject, isOpen]);
 
-  if (!isOpen || !subject) return null
+  if (!isOpen || !subject) return null;
 
   const handleSave = async (): Promise<void> => {
-    if (!window.api) return
+    if (!window.api) return;
     const noteData: SubjectNote = {
       id: noteId || `note-${Date.now()}`,
       subjectId: subject.id,
       title: title || `Notes de cours — ${subject.name}`,
       content,
-      updatedAt: new Date().toISOString()
-    }
-    await window.api.db.saveNote(noteData)
-    setNoteId(noteData.id)
-    setIsSaved(true)
-    setTimeout(() => setIsSaved(false), 2000)
-  }
+      updatedAt: new Date().toISOString(),
+    };
+    await window.api.db.saveNote(noteData);
+    setNoteId(noteData.id);
+    setIsSaved(true);
+    setTimeout(() => setIsSaved(false), 2000);
+  };
 
   return (
     <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
@@ -63,12 +65,14 @@ export const SubjectNotesModal: React.FC<SubjectNotesModalProps> = ({
               className="w-7 h-7 rounded-lg flex items-center justify-center text-sm"
               style={{ backgroundColor: `${subject.color}25` }}
             >
-              {subject.icon || '📝'}
+              {subject.icon || "📝"}
             </div>
             <div>
               <h2 className="font-display text-sm font-bold text-white flex items-center gap-2">
                 <span>{subject.name}</span>
-                <span className="text-xs text-slate-400 font-normal">Bloc-notes Markdown</span>
+                <span className="text-xs text-slate-400 font-normal">
+                  Bloc-notes Markdown
+                </span>
               </h2>
             </div>
           </div>
@@ -79,7 +83,7 @@ export const SubjectNotesModal: React.FC<SubjectNotesModalProps> = ({
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-accent hover:bg-accent-hover text-white text-xs font-semibold shadow-glow transition-all"
             >
               <Save className="w-3.5 h-3.5" />
-              <span>{isSaved ? 'Enregistré !' : 'Enregistrer'}</span>
+              <span>{isSaved ? "Enregistré !" : "Enregistrer"}</span>
             </button>
             <button
               onClick={onClose}
@@ -109,5 +113,5 @@ export const SubjectNotesModal: React.FC<SubjectNotesModalProps> = ({
         </div>
       </div>
     </div>
-  )
-}
+  );
+};

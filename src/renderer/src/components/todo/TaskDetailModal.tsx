@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect } from "react";
 import {
   X,
   Calendar,
@@ -11,19 +11,23 @@ import {
   ExternalLink,
   Plus,
   Trash2,
-  Sparkles
-} from 'lucide-react'
-import { useTaskStore } from '../../stores/useTaskStore'
-import { useSubjectStore } from '../../stores/useSubjectStore'
-import { Task, TaskType, PriorityLevel, TaskStatus } from '../../types'
+  Sparkles,
+} from "lucide-react";
+import { useTaskStore } from "../../stores/useTaskStore";
+import { useSubjectStore } from "../../stores/useSubjectStore";
+import { Task, TaskType, PriorityLevel, TaskStatus } from "../../types";
 
 interface TaskDetailModalProps {
-  taskId: string | null
-  isOpen: boolean
-  onClose: () => void
+  taskId: string | null;
+  isOpen: boolean;
+  onClose: () => void;
 }
 
-export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({ taskId, isOpen, onClose }) => {
+export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
+  taskId,
+  isOpen,
+  onClose,
+}) => {
   const {
     tasks,
     saveTask,
@@ -35,61 +39,63 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({ taskId, isOpen
     attachments,
     addAttachment,
     removeAttachment,
-    relocateAttachment
-  } = useTaskStore()
-  const { subjects } = useSubjectStore()
+    relocateAttachment,
+  } = useTaskStore();
+  const { subjects } = useSubjectStore();
 
-  const [title, setTitle] = useState('')
-  const [description, setDescription] = useState('')
-  const [subjectId, setSubjectId] = useState<string>('')
-  const [type, setType] = useState<TaskType>('devoir')
-  const [priority, setPriority] = useState<PriorityLevel>('medium')
-  const [dueDate, setDueDate] = useState('')
-  const [estimatedDuration, setEstimatedDuration] = useState<number>(30)
-  const [status, setStatus] = useState<TaskStatus>('todo')
-  const [tagInput, setTagInput] = useState('')
-  const [tags, setTags] = useState<string[]>([])
-  const [newSubtaskTitle, setNewSubtaskTitle] = useState('')
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [subjectId, setSubjectId] = useState<string>("");
+  const [type, setType] = useState<TaskType>("devoir");
+  const [priority, setPriority] = useState<PriorityLevel>("medium");
+  const [dueDate, setDueDate] = useState("");
+  const [estimatedDuration, setEstimatedDuration] = useState<number>(30);
+  const [status, setStatus] = useState<TaskStatus>("todo");
+  const [tagInput, setTagInput] = useState("");
+  const [tags, setTags] = useState<string[]>([]);
+  const [newSubtaskTitle, setNewSubtaskTitle] = useState("");
 
-  const task = tasks.find((t) => t.id === taskId)
-  const taskSubtasks = taskId ? subtasks[taskId] || [] : []
-  const taskAttachments = taskId ? attachments[taskId] || [] : []
+  const task = tasks.find((t) => t.id === taskId);
+  const taskSubtasks = taskId ? subtasks[taskId] || [] : [];
+  const taskAttachments = taskId ? attachments[taskId] || [] : [];
 
   useEffect(() => {
     if (task) {
-      setTitle(task.title)
-      setDescription(task.description || '')
-      setSubjectId(task.subjectId || '')
-      setType(task.type)
-      setPriority(task.priority)
-      setDueDate(task.dueDate ? task.dueDate.substring(0, 16) : '')
-      setEstimatedDuration(task.estimatedDuration || 30)
-      setStatus(task.status)
-      setTags(task.tags || [])
+      setTitle(task.title);
+      setDescription(task.description || "");
+      setSubjectId(task.subjectId || "");
+      setType(task.type);
+      setPriority(task.priority);
+      setDueDate(task.dueDate ? task.dueDate.substring(0, 16) : "");
+      setEstimatedDuration(task.estimatedDuration || 30);
+      setStatus(task.status);
+      setTags(task.tags || []);
     } else {
       // New task defaults
-      setTitle('')
-      setDescription('')
-      setSubjectId(subjects[0]?.id || '')
-      setType('devoir')
-      setPriority('medium')
-      const tomorrow = new Date()
-      tomorrow.setDate(tomorrow.getDate() + 1)
-      tomorrow.setHours(18, 0, 0, 0)
-      setDueDate(tomorrow.toISOString().substring(0, 16))
-      setEstimatedDuration(30)
-      setStatus('todo')
-      setTags([])
+      setTitle("");
+      setDescription("");
+      setSubjectId(subjects[0]?.id || "");
+      setType("devoir");
+      setPriority("medium");
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      tomorrow.setHours(18, 0, 0, 0);
+      setDueDate(tomorrow.toISOString().substring(0, 16));
+      setEstimatedDuration(30);
+      setStatus("todo");
+      setTags([]);
     }
-  }, [task, isOpen, subjects])
+  }, [task, isOpen, subjects]);
 
-  if (!isOpen) return null
+  if (!isOpen) return null;
 
   const handleSave = async (): Promise<void> => {
-    if (!title.trim()) return
+    if (!title.trim()) return;
 
     const newTask: Task = {
-      id: taskId || `task-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+      id:
+        taskId ||
+        `task-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
       title: title.trim(),
       description: description.trim(),
       subjectId: subjectId || undefined,
@@ -102,80 +108,88 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({ taskId, isOpen
       orderIndex: task ? task.orderIndex : tasks.length,
       isArchived: false,
       createdAt: task ? task.createdAt : new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    }
+      updatedAt: new Date().toISOString(),
+    };
 
-    await saveTask(newTask)
-    onClose()
-  }
+    await saveTask(newTask);
+    onClose();
+  };
 
   const handleDelete = async (): Promise<void> => {
     if (taskId) {
-      await deleteTask(taskId)
-      onClose()
+      await deleteTask(taskId);
+      onClose();
     }
-  }
+  };
 
   const handleAddTag = (): void => {
     if (tagInput.trim() && !tags.includes(tagInput.trim())) {
-      setTags([...tags, tagInput.trim()])
-      setTagInput('')
+      setTags([...tags, tagInput.trim()]);
+      setTagInput("");
     }
-  }
+  };
 
   const handleRemoveTag = (tagToRemove: string): void => {
-    setTags(tags.filter((t) => t !== tagToRemove))
-  }
+    setTags(tags.filter((t) => t !== tagToRemove));
+  };
 
   const handleAddSubtask = async (e: React.FormEvent): Promise<void> => {
-    e.preventDefault()
+    e.preventDefault();
     if (taskId && newSubtaskTitle.trim()) {
-      await addSubtask(taskId, newSubtaskTitle.trim())
-      setNewSubtaskTitle('')
+      await addSubtask(taskId, newSubtaskTitle.trim());
+      setNewSubtaskTitle("");
     }
-  }
+  };
 
   // Sélection de documents locaux sans copie
   const handlePickFiles = async (): Promise<void> => {
-    if (!taskId) return
+    if (!taskId) return;
     const picked = await window.api.dialog.pickFiles({
-      title: 'Sélectionner des documents de cours ou devoirs'
-    })
+      title: "Sélectionner des documents de cours ou devoirs",
+    });
     if (picked && picked.length > 0) {
       for (const file of picked) {
-        await addAttachment(taskId, file.filePath, file.fileName, file.fileType, file.fileSize)
+        await addAttachment(
+          taskId,
+          file.filePath,
+          file.fileName,
+          file.fileType,
+          file.fileSize,
+        );
       }
     }
-  }
+  };
 
   // Relocalisation si fichier déplacé
   const handleRelocate = async (attachmentId: string): Promise<void> => {
-    if (!taskId) return
+    if (!taskId) return;
     const picked = await window.api.dialog.pickFiles({
-      title: 'Relocaliser le fichier manquant'
-    })
+      title: "Relocaliser le fichier manquant",
+    });
     if (picked && picked.length > 0) {
-      await relocateAttachment(taskId, attachmentId, picked[0].filePath)
+      await relocateAttachment(taskId, attachmentId, picked[0].filePath);
     }
-  }
+  };
 
   // Planificateur de révisions intelligente
   const handleGenerateRevisionPlan = async (): Promise<void> => {
-    if (!taskId || !title) return
+    if (!taskId || !title) return;
     const revisionSteps = [
-      'J-14 : Découverte et relecture active du cours',
-      'J-7 : Fiches de synthèse et mémorisation des formules',
-      'J-3 : Entraînement sur exercices types et annales',
-      'J-1 : Relecture finale et préparation des affaires'
-    ]
+      "J-14 : Découverte et relecture active du cours",
+      "J-7 : Fiches de synthèse et mémorisation des formules",
+      "J-3 : Entraînement sur exercices types et annales",
+      "J-1 : Relecture finale et préparation des affaires",
+    ];
     for (const step of revisionSteps) {
-      await addSubtask(taskId, step)
+      await addSubtask(taskId, step);
     }
-  }
+  };
 
-  const completedSubsCount = taskSubtasks.filter((s) => s.completed).length
+  const completedSubsCount = taskSubtasks.filter((s) => s.completed).length;
   const progressPercent =
-    taskSubtasks.length > 0 ? Math.round((completedSubsCount / taskSubtasks.length) * 100) : 0
+    taskSubtasks.length > 0
+      ? Math.round((completedSubsCount / taskSubtasks.length) * 100)
+      : 0;
 
   return (
     <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
@@ -184,7 +198,7 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({ taskId, isOpen
         <div className="px-6 py-4 border-b border-white/5 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span className="text-xs uppercase font-bold tracking-wider text-accent">
-              {taskId ? 'Détail de la tâche' : 'Nouvelle tâche'}
+              {taskId ? "Détail de la tâche" : "Nouvelle tâche"}
             </span>
           </div>
           <button
@@ -216,7 +230,9 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({ taskId, isOpen
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
             {/* Matière */}
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1.5">Matière</label>
+              <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+                Matière
+              </label>
               <select
                 value={subjectId}
                 onChange={(e) => setSubjectId(e.target.value)}
@@ -233,7 +249,9 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({ taskId, isOpen
 
             {/* Type */}
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1.5">Type</label>
+              <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+                Type
+              </label>
               <select
                 value={type}
                 onChange={(e) => setType(e.target.value as TaskType)}
@@ -251,7 +269,9 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({ taskId, isOpen
 
             {/* Priorité */}
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1.5">Priorité</label>
+              <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+                Priorité
+              </label>
               <select
                 value={priority}
                 onChange={(e) => setPriority(e.target.value as PriorityLevel)}
@@ -292,7 +312,9 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({ taskId, isOpen
                   min="5"
                   step="5"
                   value={estimatedDuration}
-                  onChange={(e) => setEstimatedDuration(parseInt(e.target.value, 10) || 0)}
+                  onChange={(e) =>
+                    setEstimatedDuration(parseInt(e.target.value, 10) || 0)
+                  }
                   className="w-full bg-slate-900/90 border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-accent"
                 />
                 <span className="text-xs text-slate-400">min</span>
@@ -301,7 +323,9 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({ taskId, isOpen
 
             {/* Statut */}
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1.5">Statut</label>
+              <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+                Statut
+              </label>
               <select
                 value={status}
                 onChange={(e) => setStatus(e.target.value as TaskStatus)}
@@ -329,7 +353,7 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({ taskId, isOpen
           </div>
 
           {/* Planificateur de révisions intelligente (si contrôle) */}
-          {(type === 'controle' || type === 'projet') && taskId && (
+          {(type === "controle" || type === "projet") && taskId && (
             <div className="p-3.5 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-between">
               <div>
                 <p className="text-xs font-semibold text-indigo-300 flex items-center gap-1.5">
@@ -337,7 +361,8 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({ taskId, isOpen
                   <span>Planificateur de révisions espacées</span>
                 </p>
                 <p className="text-[11px] text-slate-400 mt-0.5">
-                  Générer automatiquement les sessions de révision suggérées (J-14, J-7, J-3, J-1)
+                  Générer automatiquement les sessions de révision suggérées
+                  (J-14, J-7, J-3, J-1)
                 </p>
               </div>
               <button
@@ -356,7 +381,9 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({ taskId, isOpen
               <div className="flex items-center justify-between">
                 <label className="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
                   <CheckSquare className="w-3.5 h-3.5 text-accent" />
-                  <span>Sous-tâches ({completedSubsCount}/{taskSubtasks.length})</span>
+                  <span>
+                    Sous-tâches ({completedSubsCount}/{taskSubtasks.length})
+                  </span>
                 </label>
                 {taskSubtasks.length > 0 && (
                   <span className="text-xs font-semibold text-slate-400">
@@ -391,7 +418,9 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({ taskId, isOpen
                       />
                       <span
                         className={`text-xs truncate ${
-                          st.completed ? 'line-through text-slate-500' : 'text-slate-200'
+                          st.completed
+                            ? "line-through text-slate-500"
+                            : "text-slate-200"
                         }`}
                       >
                         {st.title}
@@ -450,7 +479,8 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({ taskId, isOpen
                   className="border border-dashed border-white/10 rounded-xl p-4 text-center cursor-pointer hover:border-accent/40 transition-colors"
                 >
                   <p className="text-xs text-slate-400">
-                    Cliquez pour lier un PDF, cours, sujet ou dossier de votre PC.
+                    Cliquez pour lier un PDF, cours, sujet ou dossier de votre
+                    PC.
                   </p>
                   <p className="text-[10px] text-slate-500 mt-0.5">
                     Le fichier original n'est jamais déplacé ni copié.
@@ -463,24 +493,28 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({ taskId, isOpen
                       key={att.id}
                       className={`flex items-center justify-between p-2.5 rounded-xl border transition-all ${
                         att.isMissing
-                          ? 'bg-red-500/10 border-red-500/30'
-                          : 'bg-white/5 border-white/5 hover:border-white/10'
+                          ? "bg-red-500/10 border-red-500/30"
+                          : "bg-white/5 border-white/5 hover:border-white/10"
                       }`}
                     >
                       <div className="flex items-center gap-2.5 min-w-0 flex-1">
                         <span className="text-base">
-                          {att.fileType?.includes('pdf')
-                            ? '📕'
-                            : att.fileType?.includes('doc')
-                            ? '📘'
-                            : att.fileType?.includes('ppt')
-                            ? '📙'
-                            : att.fileType?.includes('png') || att.fileType?.includes('jpg')
-                            ? '🖼️'
-                            : '📄'}
+                          {att.fileType?.includes("pdf")
+                            ? "📕"
+                            : att.fileType?.includes("doc")
+                              ? "📘"
+                              : att.fileType?.includes("ppt")
+                                ? "📙"
+                                : att.fileType?.includes("png") ||
+                                    att.fileType?.includes("jpg")
+                                  ? "🖼️"
+                                  : "📄"}
                         </span>
                         <div className="min-w-0 flex-1">
-                          <p className="text-xs font-medium text-slate-200 truncate" title={att.filePath}>
+                          <p
+                            className="text-xs font-medium text-slate-200 truncate"
+                            title={att.filePath}
+                          >
                             {att.fileName}
                           </p>
                           <p className="text-[10px] text-slate-400 truncate">
@@ -507,7 +541,9 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({ taskId, isOpen
                           <>
                             <button
                               type="button"
-                              onClick={() => window.api.file.openPath(att.filePath)}
+                              onClick={() =>
+                                window.api.file.openPath(att.filePath)
+                              }
                               className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
                               title="Ouvrir le document"
                             >
@@ -515,7 +551,9 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({ taskId, isOpen
                             </button>
                             <button
                               type="button"
-                              onClick={() => window.api.file.showItemInFolder(att.filePath)}
+                              onClick={() =>
+                                window.api.file.showItemInFolder(att.filePath)
+                              }
                               className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
                               title="Afficher dans l'explorateur Windows"
                             >
@@ -568,9 +606,9 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({ taskId, isOpen
                 value={tagInput}
                 onChange={(e) => setTagInput(e.target.value)}
                 onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
-                    e.preventDefault()
-                    handleAddTag()
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    handleAddTag();
                   }
                 }}
                 placeholder="Ajouter une étiquette (ex : #urgent)..."
@@ -621,5 +659,5 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({ taskId, isOpen
         </div>
       </div>
     </div>
-  )
-}
+  );
+};

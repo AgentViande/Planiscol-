@@ -1,36 +1,44 @@
-import React, { useState } from 'react'
-import { Plus, Award, Trash2 } from 'lucide-react'
-import { useGradeStore } from '../../stores/useGradeStore'
-import { useSubjectStore } from '../../stores/useSubjectStore'
-import { Grade } from '../../types'
+import React, { useState } from "react";
+import { Plus, Award, Trash2 } from "lucide-react";
+import { useGradeStore } from "../../stores/useGradeStore";
+import { useSubjectStore } from "../../stores/useSubjectStore";
+import { Grade } from "../../types";
 
 export const GradesView: React.FC = () => {
-  const { grades, saveGrade, deleteGrade, getSubjectAverage, getOverallAverage } = useGradeStore()
-  const { subjects } = useSubjectStore()
+  const {
+    grades,
+    saveGrade,
+    deleteGrade,
+    getSubjectAverage,
+    getOverallAverage,
+  } = useGradeStore();
+  const { subjects } = useSubjectStore();
 
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const [selectedSubjectId, setSelectedSubjectId] = useState(subjects[0]?.id || '')
-  const [title, setTitle] = useState('')
-  const [value, setValue] = useState<number>(15)
-  const [outOf, setOutOf] = useState<number>(20)
-  const [coefficient, setCoefficient] = useState<number>(1)
-  const [period, setPeriod] = useState('Trimestre 1')
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedSubjectId, setSelectedSubjectId] = useState(
+    subjects[0]?.id || "",
+  );
+  const [title, setTitle] = useState("");
+  const [value, setValue] = useState<number>(15);
+  const [outOf, setOutOf] = useState<number>(20);
+  const [coefficient, setCoefficient] = useState<number>(1);
+  const [period, setPeriod] = useState("Trimestre 1");
 
-  const overallAvg = getOverallAverage()
+  const overallAvg = getOverallAverage();
 
   const handleOpenAdd = (subId?: string): void => {
-    setSelectedSubjectId(subId || subjects[0]?.id || '')
-    setTitle('')
-    setValue(15)
-    setOutOf(20)
-    setCoefficient(1)
-    setPeriod('Trimestre 1')
-    setIsModalOpen(true)
-  }
+    setSelectedSubjectId(subId || subjects[0]?.id || "");
+    setTitle("");
+    setValue(15);
+    setOutOf(20);
+    setCoefficient(1);
+    setPeriod("Trimestre 1");
+    setIsModalOpen(true);
+  };
 
   const handleSave = async (e: React.FormEvent): Promise<void> => {
-    e.preventDefault()
-    if (!title.trim() || !selectedSubjectId) return
+    e.preventDefault();
+    if (!title.trim() || !selectedSubjectId) return;
 
     const newGrade: Grade = {
       id: `grade-${Date.now()}`,
@@ -39,13 +47,13 @@ export const GradesView: React.FC = () => {
       value,
       outOf: outOf > 0 ? outOf : 20,
       coefficient: coefficient > 0 ? coefficient : 1,
-      date: new Date().toISOString().split('T')[0],
-      period
-    }
+      date: new Date().toISOString().split("T")[0],
+      period,
+    };
 
-    await saveGrade(newGrade)
-    setIsModalOpen(false)
-  }
+    await saveGrade(newGrade);
+    setIsModalOpen(false);
+  };
 
   return (
     <div className="h-full flex flex-col p-6 space-y-5 overflow-hidden select-none">
@@ -56,7 +64,8 @@ export const GradesView: React.FC = () => {
             Suivi des Notes & Coefficients
           </h1>
           <p className="text-xs text-slate-400 mt-0.5">
-            Moyennes pondérées par matière et calcul automatique de la moyenne générale.
+            Moyennes pondérées par matière et calcul automatique de la moyenne
+            générale.
           </p>
         </div>
 
@@ -81,7 +90,7 @@ export const GradesView: React.FC = () => {
             </span>
             <div className="flex items-baseline gap-2 mt-0.5">
               <span className="font-display text-3xl font-extrabold text-white">
-                {overallAvg !== null ? `${overallAvg}` : '—'}
+                {overallAvg !== null ? `${overallAvg}` : "—"}
               </span>
               <span className="text-sm font-semibold text-slate-400">/ 20</span>
             </div>
@@ -90,9 +99,12 @@ export const GradesView: React.FC = () => {
 
         <div className="text-xs text-slate-400 sm:text-right">
           <p className="font-medium text-slate-300">
-            {grades.length} note{grades.length > 1 ? 's' : ''} enregistrée{grades.length > 1 ? 's' : ''}
+            {grades.length} note{grades.length > 1 ? "s" : ""} enregistrée
+            {grades.length > 1 ? "s" : ""}
           </p>
-          <p className="text-[11px] text-slate-500 mt-0.5">Calcul basé sur les coefficients configurés</p>
+          <p className="text-[11px] text-slate-500 mt-0.5">
+            Calcul basé sur les coefficients configurés
+          </p>
         </div>
       </div>
 
@@ -100,8 +112,8 @@ export const GradesView: React.FC = () => {
       <div className="flex-1 overflow-y-auto pr-1">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {subjects.map((sub) => {
-            const subGrades = grades.filter((g) => g.subjectId === sub.id)
-            const subAvg = getSubjectAverage(sub.id)
+            const subGrades = grades.filter((g) => g.subjectId === sub.id);
+            const subAvg = getSubjectAverage(sub.id);
 
             return (
               <div
@@ -112,9 +124,11 @@ export const GradesView: React.FC = () => {
                   {/* Subject Header */}
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2.5">
-                      <span className="text-lg">{sub.icon || '📖'}</span>
+                      <span className="text-lg">{sub.icon || "📖"}</span>
                       <div>
-                        <h3 className="font-display font-bold text-sm text-white">{sub.name}</h3>
+                        <h3 className="font-display font-bold text-sm text-white">
+                          {sub.name}
+                        </h3>
                         <span className="text-[10px] text-slate-400">
                           Coeff : {sub.coefficient || 1}
                         </span>
@@ -126,10 +140,10 @@ export const GradesView: React.FC = () => {
                         className="font-display text-lg font-bold px-2 py-0.5 rounded-lg"
                         style={{
                           backgroundColor: `${sub.color}20`,
-                          color: sub.color
+                          color: sub.color,
                         }}
                       >
-                        {subAvg !== null ? `${subAvg}/20` : '—'}
+                        {subAvg !== null ? `${subAvg}/20` : "—"}
                       </span>
                     </div>
                   </div>
@@ -147,7 +161,9 @@ export const GradesView: React.FC = () => {
                           className="flex items-center justify-between p-2 rounded-lg bg-white/5 hover:bg-white/10 group"
                         >
                           <div className="min-w-0 flex-1">
-                            <p className="text-xs font-medium text-slate-200 truncate">{g.title}</p>
+                            <p className="text-xs font-medium text-slate-200 truncate">
+                              {g.title}
+                            </p>
                             <p className="text-[10px] text-slate-400">
                               Coeff {g.coefficient} • {g.period}
                             </p>
@@ -179,7 +195,7 @@ export const GradesView: React.FC = () => {
                   + Ajouter une note en {sub.name}
                 </button>
               </div>
-            )
+            );
           })}
         </div>
       </div>
@@ -194,7 +210,9 @@ export const GradesView: React.FC = () => {
 
             <form onSubmit={handleSave} className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">Matière</label>
+                <label className="block text-xs font-semibold text-slate-300 mb-1">
+                  Matière
+                </label>
                 <select
                   value={selectedSubjectId}
                   onChange={(e) => setSelectedSubjectId(e.target.value)}
@@ -224,7 +242,9 @@ export const GradesView: React.FC = () => {
 
               <div className="grid grid-cols-3 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">Note</label>
+                  <label className="block text-xs font-semibold text-slate-300 mb-1">
+                    Note
+                  </label>
                   <input
                     type="number"
                     step="0.25"
@@ -237,7 +257,9 @@ export const GradesView: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">Sur</label>
+                  <label className="block text-xs font-semibold text-slate-300 mb-1">
+                    Sur
+                  </label>
                   <input
                     type="number"
                     step="1"
@@ -259,14 +281,18 @@ export const GradesView: React.FC = () => {
                     min="0.5"
                     required
                     value={coefficient}
-                    onChange={(e) => setCoefficient(parseFloat(e.target.value) || 1)}
+                    onChange={(e) =>
+                      setCoefficient(parseFloat(e.target.value) || 1)
+                    }
                     className="w-full bg-slate-900 border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-accent"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">Période</label>
+                <label className="block text-xs font-semibold text-slate-300 mb-1">
+                  Période
+                </label>
                 <select
                   value={period}
                   onChange={(e) => setPeriod(e.target.value)}
@@ -300,5 +326,5 @@ export const GradesView: React.FC = () => {
         </div>
       )}
     </div>
-  )
-}
+  );
+};

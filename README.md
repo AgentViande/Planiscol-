@@ -18,10 +18,17 @@
 - **Sous-tâches avec progression** : Checklist d'étapes avec calcul automatique du pourcentage d'avancement.
 - **Planificateur de révisions espacées** : Génération en un clic des sessions de révision suggérées avant un contrôle (J-14, J-7, J-3, J-1).
 
-### 2. Double Affichage 100% Synchronisé
+### 2. Triple Affichage 100% Synchronisé (To-Do / Kanban / Agenda)
 - **Vue To-Do List** : Découpage automatique en sections intelligentes (*En retard*, *Aujourd'hui*, *Cette semaine*, *Plus tard*, *Terminées*), filtres combinables (matières, priorités, statuts), recherche instantanée et animation de complétion avec confettis.
+- **Vue Tableau Kanban** :
+  - **Colonnes & Glisser-déposer** : Colonnes par statut (*À faire*, *En cours*, *Terminé*), réordonnancement fluide et déplacement accessible avec `@dnd-kit` et `Framer Motion`.
+  - **Cartes riches** : Pastille/bande matière, badge de priorité accessible (🔴 / 🟠 / 🟢 avec texte explicite), échéance lisible (« En retard », « Demain », « Ven. 18h »), jauge de progression des sous-tâches, compteur de documents liés et alerte de lien cassé, tags.
+  - **Création rapide intégrée** : Bouton « + Ajouter » au pied de chaque colonne pour saisir le titre directement au clavier avec le statut pré-appliqué.
+  - **Couloirs horizontaux (Swimlanes)** : Regroupement optionnel par Matière ou par Priorité.
+  - **Colonnes personnalisables** : Renommer, ajouter, colorer, réordonner ou supprimer des colonnes supplémentaires (ex : « À relire », « En attente ») rattachées aux 3 statuts fondamentaux.
+  - **Historique Annuler / Rétablir** : Raccourcis `Ctrl+Z` / `Ctrl+Y` pour annuler ou rétablir les déplacements de cartes.
 - **Vue Agenda type Google Agenda** : Vues Jour, Semaine, Mois, Planning ; déplacement par drag & drop, redimensionnement de la durée, indicateur visuel de l'heure en cours (*maintenant*), et intégration des créneaux de cours en filigrane d'arrière-plan.
-- *Toute modification dans une vue est instantanément répercutée dans l'autre.*
+- *Toute modification dans une vue est instantanément répercutée dans les autres sans aucune duplication de données.*
 
 ### 3. Fichiers & Documents Liés (Règle Absolue : Zéro Copie)
 - Liaison directe vers des documents de cours (PDF, Word, Diaporama, images) ou dossiers de révision.

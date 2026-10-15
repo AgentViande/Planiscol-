@@ -1,35 +1,38 @@
-import React, { useEffect, useState } from 'react'
-import { Minus, Square, Copy, X, Sparkles, Command } from 'lucide-react'
+import React, { useEffect, useState } from "react";
+import { Minus, Square, Copy, X, Sparkles, Command } from "lucide-react";
 
 interface TitleBarProps {
-  onOpenQuickAdd: () => void
-  onOpenCommandPalette: () => void
+  onOpenQuickAdd: () => void;
+  onOpenCommandPalette: () => void;
 }
 
-export const TitleBar: React.FC<TitleBarProps> = ({ onOpenQuickAdd, onOpenCommandPalette }) => {
-  const [isMaximized, setIsMaximized] = useState(false)
+export const TitleBar: React.FC<TitleBarProps> = ({
+  onOpenQuickAdd,
+  onOpenCommandPalette,
+}) => {
+  const [isMaximized, setIsMaximized] = useState(false);
 
   useEffect(() => {
     if (window.api) {
-      window.api.window.isMaximized().then(setIsMaximized)
+      window.api.window.isMaximized().then(setIsMaximized);
     }
-  }, [])
+  }, []);
 
   const handleMinimize = (): void => {
-    window.api?.window.minimize()
-  }
+    window.api?.window.minimize();
+  };
 
   const handleMaximize = async (): Promise<void> => {
     if (window.api) {
-      window.api.window.maximize()
-      const max = await window.api.window.isMaximized()
-      setIsMaximized(max)
+      window.api.window.maximize();
+      const max = await window.api.window.isMaximized();
+      setIsMaximized(max);
     }
-  }
+  };
 
   const handleClose = (): void => {
-    window.api?.window.close()
-  }
+    window.api?.window.close();
+  };
 
   return (
     <header className="h-10 bg-slate-950/80 border-b border-white/5 flex items-center justify-between px-3 select-none titlebar-drag-region z-50">
@@ -52,7 +55,9 @@ export const TitleBar: React.FC<TitleBarProps> = ({ onOpenQuickAdd, onOpenComman
         >
           <Sparkles className="w-3.5 h-3.5 text-accent" />
           <span>Ajout Rapide</span>
-          <kbd className="text-[10px] bg-white/10 px-1 py-0.5 rounded text-slate-400">Ctrl+Space</kbd>
+          <kbd className="text-[10px] bg-white/10 px-1 py-0.5 rounded text-slate-400">
+            Ctrl+Space
+          </kbd>
         </button>
 
         <button
@@ -61,7 +66,9 @@ export const TitleBar: React.FC<TitleBarProps> = ({ onOpenQuickAdd, onOpenComman
           title="Palette de commandes (Ctrl+K)"
         >
           <Command className="w-3.5 h-3.5 text-slate-400" />
-          <kbd className="text-[10px] bg-white/10 px-1 py-0.5 rounded text-slate-400">Ctrl+K</kbd>
+          <kbd className="text-[10px] bg-white/10 px-1 py-0.5 rounded text-slate-400">
+            Ctrl+K
+          </kbd>
         </button>
       </div>
 
@@ -78,9 +85,13 @@ export const TitleBar: React.FC<TitleBarProps> = ({ onOpenQuickAdd, onOpenComman
         <button
           onClick={handleMaximize}
           className="w-10 h-10 flex items-center justify-center hover:bg-white/5 text-slate-400 hover:text-slate-200 transition-colors"
-          title={isMaximized ? 'Restaurer' : 'Agrandir'}
+          title={isMaximized ? "Restaurer" : "Agrandir"}
         >
-          {isMaximized ? <Copy className="w-3 h-3" /> : <Square className="w-3 h-3" />}
+          {isMaximized ? (
+            <Copy className="w-3 h-3" />
+          ) : (
+            <Square className="w-3 h-3" />
+          )}
         </button>
 
         <button
@@ -92,5 +103,5 @@ export const TitleBar: React.FC<TitleBarProps> = ({ onOpenQuickAdd, onOpenComman
         </button>
       </div>
     </header>
-  )
-}
+  );
+};
