@@ -13,14 +13,16 @@ import { QuickAddModal } from "./components/quickadd/QuickAddModal";
 import { CommandPaletteModal } from "./components/commandpalette/CommandPaletteModal";
 import { TaskDetailModal } from "./components/todo/TaskDetailModal";
 import { SubjectNotesModal } from "./components/subjects/SubjectNotesModal";
-import { PomodoroModal } from "./components/pomodoro/PomodoroModal";
+import { FocusModeView } from "./components/pomodoro/FocusModeView";
 import { OnboardingModal } from "./components/onboarding/OnboardingModal";
+import { UpdateNotificationBanner } from "./components/layout/UpdateNotificationBanner";
 
 import { useSettingsStore } from "./stores/useSettingsStore";
 import { useSubjectStore } from "./stores/useSubjectStore";
 import { useTaskStore } from "./stores/useTaskStore";
 import { useTimetableStore } from "./stores/useTimetableStore";
 import { useGradeStore } from "./stores/useGradeStore";
+import { usePomodoroStore } from "./stores/usePomodoroStore";
 import { Subject } from "./types";
 
 export const App: React.FC = () => {
@@ -31,11 +33,11 @@ export const App: React.FC = () => {
   // Modals state
   const [isQuickAddOpen, setIsQuickAddOpen] = useState(false);
   const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false);
-  const [isPomodoroOpen, setIsPomodoroOpen] = useState(false);
   const [isTaskDetailOpen, setIsTaskDetailOpen] = useState(false);
   const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
   const [notesSubject, setNotesSubject] = useState<Subject | null>(null);
 
+  const { openFocusMode } = usePomodoroStore();
   const { loadSubjects } = useSubjectStore();
   const { loadTasks, setSelectedTaskId: setStoreSelectedTaskId } =
     useTaskStore();
@@ -148,7 +150,7 @@ export const App: React.FC = () => {
         <Sidebar
           currentTab={currentTab}
           onTabChange={handleTabChange}
-          onOpenPomodoro={() => setIsPomodoroOpen(true)}
+          onOpenPomodoro={() => openFocusMode()}
           isCollapsed={isSidebarCollapsed}
           onToggleCollapse={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
         />
@@ -206,7 +208,7 @@ export const App: React.FC = () => {
         onClose={() => setIsCommandPaletteOpen(false)}
         onNavigate={(tab) => setCurrentTab(tab)}
         onOpenQuickAdd={() => setIsQuickAddOpen(true)}
-        onOpenPomodoro={() => setIsPomodoroOpen(true)}
+        onOpenPomodoro={() => openFocusMode()}
         onOpenCreateTask={handleCreateTask}
       />
 
@@ -225,12 +227,10 @@ export const App: React.FC = () => {
         onClose={() => setNotesSubject(null)}
       />
 
-      <PomodoroModal
-        isOpen={isPomodoroOpen}
-        onClose={() => setIsPomodoroOpen(false)}
-      />
+      <FocusModeView />
 
       <OnboardingModal />
+      <UpdateNotificationBanner />
     </div>
   );
 };

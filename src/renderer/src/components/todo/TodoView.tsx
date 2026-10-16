@@ -10,9 +10,11 @@ import {
   CheckCircle2,
   Trash2,
   Columns3,
+  Flame,
 } from "lucide-react";
 import { useTaskStore } from "../../stores/useTaskStore";
 import { useSubjectStore } from "../../stores/useSubjectStore";
+import { usePomodoroStore } from "../../stores/usePomodoroStore";
 import { Task, PriorityLevel, TaskType } from "../../types";
 
 interface TodoViewProps {
@@ -204,17 +206,31 @@ export const TodoView: React.FC<TodoViewProps> = ({
           </div>
         </div>
 
-        {/* Delete Button */}
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            deleteTask(task.id);
-          }}
-          className="opacity-0 group-hover:opacity-100 p-1.5 rounded-lg text-slate-400 hover:text-red-400 hover:bg-white/5 transition-all"
-          title="Supprimer la tâche"
-        >
-          <Trash2 className="w-4 h-4" />
-        </button>
+        {/* Actions Button */}
+        <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+          {task.status !== "done" && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                usePomodoroStore.getState().openFocusMode(task.id);
+              }}
+              className="p-1.5 rounded-lg text-amber-400 hover:text-amber-300 hover:bg-amber-400/10 transition-colors"
+              title="Se concentrer sur cette tâche"
+            >
+              <Flame className="w-4 h-4" />
+            </button>
+          )}
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              deleteTask(task.id);
+            }}
+            className="p-1.5 rounded-lg text-slate-400 hover:text-red-400 hover:bg-white/5 transition-colors"
+            title="Supprimer la tâche"
+          >
+            <Trash2 className="w-4 h-4" />
+          </button>
+        </div>
       </div>
     );
   };

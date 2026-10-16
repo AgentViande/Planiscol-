@@ -81,6 +81,11 @@ interface TaskState {
   resetFilters: () => void;
 
   saveTask: (task: Task) => Promise<Task>;
+  saveTaskWithDetails: (
+    task: Task,
+    subtasks: Subtask[],
+    attachments: TaskAttachment[],
+  ) => Promise<Task>;
   deleteTask: (id: string) => Promise<void>;
   toggleTaskStatus: (id: string) => Promise<void>;
 
@@ -380,6 +385,58 @@ export const useTaskStore = create<TaskState>((set, get) => ({
     }
     set({ tasks: updated });
     return saved;
+  },
+
+  saveTaskWithDetails: async (
+    task: Task,
+    subtasks: Subtask[],
+    attachments: TaskAttachment[],
+  ): Promise<Task> => {
+    let savedTask = task;
+    let savedSubtasks = subtasks;
+    let savedAttachments = attachments;
+    const api = getApi();
+    if (api && api.db?.saveTaskWithDetails) {
+      const res = await api.db.saveTaskWithDetails(task, subtasks, attachments);
+      savedTask = res.task;
+      savedSubtasks = res.subtasks;
+      savedAttachments = res.attachments;
+    } else {
+      savedTask = await get().saveTask(task);
+      savedSubtasks = subtasks.map((st, idx) => ({
+        ...st,
+        taskId: savedTask.id,
+        orderIndex: idx,
+      }));
+      savedAttachments = attachments.map((att) => ({
+        ...att,
+        taskId: savedTask.id,
+      }));
+    }
+
+    const current = get().tasks;
+    const index = current.findIndex((t) => t.id === savedTask.id);
+    let updated: Task[];
+    if (index >= 0) {
+      updated = [...current];
+      updated[index] = savedTask;
+    } else {
+      updated = [savedTask, ...current];
+    }
+
+    set((state) => ({
+      tasks: updated,
+      subtasks: {
+        ...state.subtasks,
+        [savedTask.id]: savedSubtasks,
+      },
+      attachments: {
+        ...state.attachments,
+        [savedTask.id]: savedAttachments,
+      },
+    }));
+
+    return savedTask;
   },
 
   deleteTask: async (id: string): Promise<void> => {

@@ -7,10 +7,12 @@ import {
   AlertTriangle,
   CheckCircle2,
   ListTodo,
+  Flame,
 } from "lucide-react";
 import { Task } from "../../types";
 import { useSubjectStore } from "../../stores/useSubjectStore";
 import { useTaskStore } from "../../stores/useTaskStore";
+import { usePomodoroStore } from "../../stores/usePomodoroStore";
 import { formatDueDateFriendly } from "../../utils/formatDueDate";
 
 interface KanbanCardProps {
@@ -150,16 +152,30 @@ export const KanbanCard: React.FC<KanbanCardProps> = ({
           </div>
         </div>
 
-        {/* Ligne 2 : Titre de la tâche */}
-        <h4
-          className={`text-sm font-medium tracking-tight line-clamp-2 transition-colors ${
-            isDone
-              ? "line-through text-slate-500"
-              : "text-slate-100 group-hover:text-white"
-          }`}
-        >
-          {task.title}
-        </h4>
+        {/* Ligne 2 : Titre de la tâche et bouton Focus */}
+        <div className="flex items-start justify-between gap-1">
+          <h4
+            className={`text-sm font-medium tracking-tight line-clamp-2 transition-colors flex-1 ${
+              isDone
+                ? "line-through text-slate-500"
+                : "text-slate-100 group-hover:text-white"
+            }`}
+          >
+            {task.title}
+          </h4>
+          {!isDone && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                usePomodoroStore.getState().openFocusMode(task.id);
+              }}
+              className="opacity-0 group-hover:opacity-100 p-1 text-amber-400 hover:text-amber-300 hover:bg-amber-400/10 rounded transition-all shrink-0"
+              title="Se concentrer sur cette tâche"
+            >
+              <Flame className="w-3.5 h-3.5" />
+            </button>
+          )}
+        </div>
 
         {/* Ligne 3 : Barre de progression des sous-tâches */}
         {taskSubs.length > 0 && (

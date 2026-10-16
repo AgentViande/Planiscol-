@@ -13,19 +13,20 @@
 
 ## 🌟 Fonctionnalités Principales
 
-### 1. Gestion des Tâches & Devoirs
+### 1. Gestion des Tâches & Devoirs (Formulaire Unifié)
+- **Formulaire unifié de création et d'édition** : Ajoutez dès la création vos sous-tâches et associez vos documents de cours locaux sans délai, dans une même modale intuitive.
 - **Attributs complets** : Titre, notes riches (consignes/énoncés), matière, priorité sur 3 niveaux (🔴 Haute, 🟠 Moyenne, 🟢 Basse), type (devoir, contrôle, projet, exposé, révision, lecture), échéance avec heure, durée estimée, statut (à faire, en cours, terminé), étiquettes (#tags).
-- **Sous-tâches avec progression** : Checklist d'étapes avec calcul automatique du pourcentage d'avancement.
+- **Sous-tâches avec réordonnancement** : Checklist d'étapes (déplaçables haut/bas, renommables, supprimables) avec calcul automatique du pourcentage d'avancement.
 - **Planificateur de révisions espacées** : Génération en un clic des sessions de révision suggérées avant un contrôle (J-14, J-7, J-3, J-1).
 
 ### 2. Triple Affichage 100% Synchronisé (To-Do / Kanban / Agenda)
-- **Vue To-Do List** : Découpage automatique en sections intelligentes (*En retard*, *Aujourd'hui*, *Cette semaine*, *Plus tard*, *Terminées*), filtres combinables (matières, priorités, statuts), recherche instantanée et animation de complétion avec confettis.
+- **Vue To-Do List** : Découpage automatique en sections intelligentes (*En retard*, *Aujourd'hui*, *Cette semaine*, *Plus tard*, *Terminées*), filtres combinables (matières, priorités, statuts), recherche instantanée et bouton « Se concentrer ».
 - **Vue Tableau Kanban** :
   - **Colonnes & Glisser-déposer** : Colonnes par statut (*À faire*, *En cours*, *Terminé*), réordonnancement fluide et déplacement accessible avec `@dnd-kit` et `Framer Motion`.
-  - **Cartes riches** : Pastille/bande matière, badge de priorité accessible (🔴 / 🟠 / 🟢 avec texte explicite), échéance lisible (« En retard », « Demain », « Ven. 18h »), jauge de progression des sous-tâches, compteur de documents liés et alerte de lien cassé, tags.
+  - **Cartes riches** : Pastille/bande matière, badge de priorité accessible (🔴 / 🟠 / 🟢 avec texte explicite), échéance lisible (« En retard », « Demain », « Ven. 18h »), jauge de progression des sous-tâches, compteur de documents liés et alerte de lien cassé, tags, bouton Pomodoro rapide.
   - **Création rapide intégrée** : Bouton « + Ajouter » au pied de chaque colonne pour saisir le titre directement au clavier avec le statut pré-appliqué.
   - **Couloirs horizontaux (Swimlanes)** : Regroupement optionnel par Matière ou par Priorité.
-  - **Colonnes personnalisables** : Renommer, ajouter, colorer, réordonner ou supprimer des colonnes supplémentaires (ex : « À relire », « En attente ») rattachées aux 3 statuts fondamentaux.
+  - **Colonnes personnalisables** : Renommer, ajouter, colorer, réordonner ou supprimer des colonnes supplémentaires rattachées aux 3 statuts fondamentaux.
   - **Historique Annuler / Rétablir** : Raccourcis `Ctrl+Z` / `Ctrl+Y` pour annuler ou rétablir les déplacements de cartes.
 - **Vue Agenda type Google Agenda** : Vues Jour, Semaine, Mois, Planning ; déplacement par drag & drop, redimensionnement de la durée, indicateur visuel de l'heure en cours (*maintenant*), et intégration des créneaux de cours en filigrane d'arrière-plan.
 - *Toute modification dans une vue est instantanément répercutée dans les autres sans aucune duplication de données.*
@@ -40,9 +41,16 @@
 - Enregistrement des notes par matière avec intitulé, coefficient et période (trimestres/semestres).
 - Calcul automatique en temps réel de la moyenne par matière et de la **moyenne générale pondérée**.
 
-### 5. Minuteur Pomodoro & Concentration
-- Minuteur de 25 min de travail / 5 min de pause, associable directement à une tâche pour tracer le temps passé.
-- Notifications système sonores et visuelles à la fin de chaque session.
+### 5. Mode Plein Écran Immersif Pomodoro (Focus Mode)
+- **Minuteur immersif haute précision** : Minuteur circulaire SVG grand format animé par `Framer Motion`. Calcul temporel basé sur l'horloge absolue du système (`Date.now()`), garantissant l'exactitude même en cas de mise en veille ou d'arrière-plan.
+- **Cycles & Transitions de phases** : Travail (25m), Pause courte (5m) et Pause longue (15m) après 4 cycles, entièrement configurables.
+- **Ambiance sonore douce** : Carillon harmonique synthétisé via Web Audio API (aucun fichier externe requis), débrayable d'un clic avec le mode silencieux.
+- **Panneau latéral 4-en-1** :
+  - *Tâche* : rappel complet de l'énoncé et de la matière.
+  - *Sous-tâches* : cochage en direct et ajout de sous-tâches au vol.
+  - *Documents* : consultation et ouverture directe des fichiers de travail.
+  - *Notes de session* : prise de notes avec sauvegarde automatique continue et dialogue de fin de session (fusionner dans la tâche, garder en brouillon ou ignorer).
+- **Traçabilité du travail** : Cumul automatique du temps effectif (`actualDuration`) et du nombre de sessions terminées (`focusSessionsCount`) sur chaque tâche.
 
 ### 6. Ajout Rapide en Langage Naturel & Palette de Commandes
 - **Ajout rapide (`Ctrl+Space` ou `Ctrl+N`)** : Tapez naturellement :
@@ -50,11 +58,10 @@
   Planiscol extrait automatiquement la matière, la consigne, la priorité, l'échéance et les tags !
 - **Palette de commandes (`Ctrl+K`)** : Accès rapide à toutes les vues, recherche de devoirs, changement de thème et sauvegarde instantanée.
 
-### 7. Sécurité, Confidentialité & Sauvegarde 100% Locale
+### 7. Sécurité, Confidentialité & Mises à Jour Robustes
 - **Zéro serveur, zéro compte, zéro télémétrie** : 100% des données restent sur votre ordinateur (`app.getPath('userData')`).
-- **Sauvegarde atomique & sécurisée** : Écriture atomique avec protection contre les coupures de courant.
-- **Sauvegardes rotatives automatiques** : Conservation des 10 derniers instantanés dans `userData/backups/`.
-- **Export / Import complet** : Fichiers `.planiscol` pour sauvegarder et migrer facilement d'un PC à un autre.
+- **Sauvegarde atomique & sécurisée** : Écriture atomique avec protection contre les coupures de courant et sauvegardes rotatives dans `userData/backups/`.
+- **Mises à jour transparentes & fiables** : Recherche automatique au démarrage et toutes les 4h, journal persistant dans `planiscol-updater.log` avec bouton d'ouverture directe, bannière de notification avec notes de version, et script de validation `npm run test:updater`.
 
 ---
 

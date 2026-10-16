@@ -21,6 +21,11 @@ const DEFAULT_SETTINGS: UserSettings = {
   onboardingCompleted: false,
   pomodoroWorkDuration: 25,
   pomodoroBreakDuration: 5,
+  pomodoroLongBreakDuration: 15,
+  pomodoroCyclesBeforeLongBreak: 4,
+  pomodoroSoundEnabled: true,
+  pomodoroSilentMode: false,
+  fullScreenFocus: false,
 };
 
 export const useSettingsStore = create<SettingsState>((set, get) => ({

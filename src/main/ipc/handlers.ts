@@ -1,4 +1,4 @@
-import { ipcMain, shell, dialog, BrowserWindow, Notification } from "electron";
+import { ipcMain, shell, dialog, BrowserWindow, Notification, app } from "electron";
 import { DatabaseManager } from "../db/database";
 import * as fs from "fs";
 import * as path from "path";
@@ -40,6 +40,11 @@ export function registerIpcHandlers(
   // --- Tâches & Kanban ---
   ipcMain.handle("db:getTasks", () => db.getTasks());
   ipcMain.handle("db:saveTask", (_, task: Task) => db.saveTask(task));
+  ipcMain.handle(
+    "db:saveTaskWithDetails",
+    (_, task: Task, subtasks: Subtask[], attachments: TaskAttachment[]) =>
+      db.saveTaskWithDetails(task, subtasks, attachments),
+  );
   ipcMain.handle("db:deleteTask", (_, id: string) => db.deleteTask(id));
   ipcMain.handle(
     "db:reorderKanbanTasks",
@@ -194,6 +199,24 @@ export function registerIpcHandlers(
   ipcMain.handle("window:isMaximized", () => {
     const win = getMainWindow();
     return win ? win.isMaximized() : false;
+  });
+
+  ipcMain.handle("window:setFullScreen", (_, flag: boolean) => {
+    const win = getMainWindow();
+    if (win) {
+      win.setFullScreen(flag);
+      return win.isFullScreen();
+    }
+    return false;
+  });
+
+  ipcMain.handle("window:isFullScreen", () => {
+    const win = getMainWindow();
+    return win ? win.isFullScreen() : false;
+  });
+
+  ipcMain.handle("app:getVersion", () => {
+    return app.getVersion();
   });
 
   // --- Notifications Natives ---

@@ -33,6 +33,12 @@ export const api = {
     getTasks: (): Promise<Task[]> => ipcRenderer.invoke("db:getTasks"),
     saveTask: (task: Task): Promise<Task> =>
       ipcRenderer.invoke("db:saveTask", task),
+    saveTaskWithDetails: (
+      task: Task,
+      subtasks: Subtask[],
+      attachments: TaskAttachment[],
+    ): Promise<{ task: Task; subtasks: Subtask[]; attachments: TaskAttachment[] }> =>
+      ipcRenderer.invoke("db:saveTaskWithDetails", task, subtasks, attachments),
     deleteTask: (id: string): Promise<boolean> =>
       ipcRenderer.invoke("db:deleteTask", id),
     reorderKanbanTasks: (
@@ -124,6 +130,13 @@ export const api = {
     close: (): void => ipcRenderer.send("window:close"),
     isMaximized: (): Promise<boolean> =>
       ipcRenderer.invoke("window:isMaximized"),
+    setFullScreen: (flag: boolean): Promise<boolean> =>
+      ipcRenderer.invoke("window:setFullScreen", flag),
+    isFullScreen: (): Promise<boolean> =>
+      ipcRenderer.invoke("window:isFullScreen"),
+  },
+  app: {
+    getVersion: (): Promise<string> => ipcRenderer.invoke("app:getVersion"),
   },
   notification: {
     show: (payload: { title: string; body: string }): void =>
@@ -131,6 +144,9 @@ export const api = {
   },
   updater: {
     check: (): Promise<unknown> => ipcRenderer.invoke("updater:check"),
+    getLastStatus: (): Promise<unknown> =>
+      ipcRenderer.invoke("updater:getLastStatus"),
+    openLog: (): Promise<string> => ipcRenderer.invoke("updater:openLog"),
     install: (): void => ipcRenderer.send("updater:install"),
   },
   on: {

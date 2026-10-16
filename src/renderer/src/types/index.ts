@@ -46,6 +46,9 @@ export interface Task {
   orderIndex: number;
   position: number;
   columnId?: string;
+  actualDuration?: number; // Durée totale de concentration réelle en minutes
+  focusSessionsCount?: number; // Nombre de sessions Pomodoro réalisées
+  focusNotesDraft?: string; // Brouillon de notes temporaires lié au focus
   isArchived: boolean;
   createdAt: string;
   updatedAt: string;
@@ -126,6 +129,11 @@ export interface UserSettings {
   onboardingCompleted: boolean;
   pomodoroWorkDuration: number;
   pomodoroBreakDuration: number;
+  pomodoroLongBreakDuration: number;
+  pomodoroCyclesBeforeLongBreak: number;
+  pomodoroSoundEnabled: boolean;
+  pomodoroSilentMode: boolean;
+  fullScreenFocus: boolean;
   lastActiveTab?: string;
   kanbanGroupBy?: "none" | "subject" | "priority";
   kanbanHideCompletedOld?: boolean;

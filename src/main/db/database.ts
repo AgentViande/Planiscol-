@@ -44,7 +44,7 @@ export class DatabaseManager {
 
   private getInitialState(): PlaniscolDatabaseState {
     return {
-      version: 2,
+      version: 3,
       subjects: getDefaultSubjects("lycee"),
       tasks: [],
       subtasks: [],
@@ -129,6 +129,33 @@ export class DatabaseManager {
         };
       });
       currentVersion = 2;
+      this.saveAtomic(data);
+    }
+
+    // Migration V3: Mode Focus Pomodoro & suivi du temps réel
+    if (currentVersion < 3) {
+      data.version = 3;
+      data.tasks = (data.tasks || []).map((t) => ({
+        ...t,
+        actualDuration: typeof t.actualDuration === "number" ? t.actualDuration : 0,
+        focusSessionsCount: typeof t.focusSessionsCount === "number" ? t.focusSessionsCount : 0,
+        focusNotesDraft: t.focusNotesDraft || "",
+      }));
+      data.settings = {
+        ...DEFAULT_SETTINGS,
+        ...(data.settings || {}),
+        pomodoroLongBreakDuration:
+          data.settings?.pomodoroLongBreakDuration ?? DEFAULT_SETTINGS.pomodoroLongBreakDuration,
+        pomodoroCyclesBeforeLongBreak:
+          data.settings?.pomodoroCyclesBeforeLongBreak ?? DEFAULT_SETTINGS.pomodoroCyclesBeforeLongBreak,
+        pomodoroSoundEnabled:
+          data.settings?.pomodoroSoundEnabled ?? DEFAULT_SETTINGS.pomodoroSoundEnabled,
+        pomodoroSilentMode:
+          data.settings?.pomodoroSilentMode ?? DEFAULT_SETTINGS.pomodoroSilentMode,
+        fullScreenFocus:
+          data.settings?.fullScreenFocus ?? DEFAULT_SETTINGS.fullScreenFocus,
+      };
+      currentVersion = 3;
       this.saveAtomic(data);
     }
 
@@ -302,6 +329,50 @@ export class DatabaseManager {
     }
     this.save();
     return index >= 0 ? this.state.tasks[index] : taskWithDefaults;
+  }
+
+  public saveTaskWithDetails(
+    task: Task,
+    subtasks: Subtask[],
+    attachments: TaskAttachment[],
+  ): { task: Task; subtasks: Subtask[]; attachments: TaskAttachment[] } {
+    // 1. Sauvegarde de la tâche
+    const savedTask = this.saveTask(task);
+
+    // 2. Remplacement transactionnel des sous-tâches
+    const normalizedSubtasks: Subtask[] = subtasks.map((st, idx) => ({
+      ...st,
+      id: st.id || `st-${Date.now()}-${idx}-${Math.random().toString(36).substring(2, 5)}`,
+      taskId: savedTask.id,
+      orderIndex: typeof st.orderIndex === "number" ? st.orderIndex : idx,
+    }));
+    this.state.subtasks = this.state.subtasks
+      .filter((st) => st.taskId !== savedTask.id)
+      .concat(normalizedSubtasks);
+
+    // 3. Remplacement transactionnel des documents liés (ZÉRO COPIE)
+    const normalizedAttachments: TaskAttachment[] = attachments.map((att, idx) => {
+      const exists = fs.existsSync(att.filePath);
+      const stat = exists ? fs.statSync(att.filePath) : undefined;
+      return {
+        ...att,
+        id: att.id || `att-${Date.now()}-${idx}-${Math.random().toString(36).substring(2, 5)}`,
+        taskId: savedTask.id,
+        fileSize: stat ? stat.size : att.fileSize,
+        isMissing: !exists,
+        addedAt: att.addedAt || new Date().toISOString(),
+      };
+    });
+    this.state.attachments = this.state.attachments
+      .filter((att) => att.taskId !== savedTask.id)
+      .concat(normalizedAttachments);
+
+    this.save();
+    return {
+      task: savedTask,
+      subtasks: normalizedSubtasks,
+      attachments: normalizedAttachments,
+    };
   }
 
   public reorderKanbanTasks(
